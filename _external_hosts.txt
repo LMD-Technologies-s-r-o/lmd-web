@@ -1,0 +1,15 @@
+      6 https://www.linkedin.com
+      6 https://www.instagram.com
+      6 https://circuitninja.cz
+      6 https://axion-cad.com
+      4 https://www.bayaya.cz
+      2 https://www.svarogbuildings.com
+      2 https://www.solidworks.com
+      2 https://www.sanvio.cz
+      2 https://www.fzu.cz
+      2 https://www.btlnet.com
+      2 https://spaceresearch.cvut.cz
+      2 https://home.cern
+      2 https://fgu.cas.cz
+      2 https://circuitninja.com
+      2 https://cdnjs.cloudflare.com
