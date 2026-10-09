@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Axion CAD – LMD Technologies</title>
+<meta name="description" content="Axion CAD – LMD Technologies">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Montserrat:wght@300;400;700&amp;display=swap">
+<style>
+body{margin:0;background:#FFFFFF}
+a{color:#014CAE}a:hover{color:#003A87}
+h1,h2,h3,p{text-wrap:pretty}
+h1,h2,h3{color:#0B3A7E}
+a[style*="border-radius: 999px"]:hover,button[type=submit]:hover{background:#003A87 !important}
+.ax-mock .window{border-radius:18px;background:#fff;box-shadow:0 40px 100px -30px rgba(15,23,42,.35),0 0 0 1px rgba(15,23,42,.06);overflow:hidden;text-align:left}
+.ax-mock .bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(15,23,42,.10);font:500 .85rem 'Geist',sans-serif;color:#475569;background:#EEF2F7}
+.ax-mock .bar i{width:11px;height:11px;border-radius:50%;background:#CBD3DE}
+.ax-mock .bar span{margin-left:10px}
+.ax-mock .app{display:grid;grid-template-columns:1fr 360px;height:470px}
+.ax-mock .viewport{position:relative;border-right:1px solid #C5CEDC;background:linear-gradient(#F5F7FB 0%,#E3E8F0 55%,#CDD5E2 100%);cursor:grab;touch-action:pan-y}
+.ax-mock .viewport canvas{width:100%;height:100%;display:block;position:absolute;inset:0}
+.ax-mock .tag{position:absolute;left:16px;bottom:14px;font:500 .8rem 'Geist',sans-serif;color:#5B6B82}
+.ax-mock .tag b{color:#1F6CC9;font-weight:600}
+.ax-mock .panel{display:flex;flex-direction:column;background:#F2F6FB;color:#1B2433;min-width:0;min-height:0;overflow:hidden}
+.ax-mock .ph{display:flex;align-items:center;gap:8px;padding:10px;background:linear-gradient(90deg,#4CC0E6 0%,#2C8AD8 55%,#1F6CC9 100%);color:#fff}
+.ax-mock .ph .hb{width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:.85rem;flex:0 0 auto}
+.ax-mock .ph .lmd{display:flex;align-items:center;gap:4px;font-weight:500;font-size:.8rem;letter-spacing:.02em;flex:0 0 auto}
+.ax-mock .ph .lmd i{width:1px;height:12px;background:rgba(255,255,255,.7)}
+.ax-mock .ph .tt{display:grid;min-width:0;flex:1 1 0%;line-height:1.2}
+.ax-mock .ph .tt strong{font:700 .95rem 'Geist',sans-serif}
+.ax-mock .ph .tt small{font:400 .64rem 'Geist',sans-serif;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ax-mock .ph .mn{flex:0 0 auto;font:600 .66rem 'Geist',sans-serif;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:7px;padding:5px 7px}
+.ax-mock .chat{flex:1 1 0%;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:.88rem;overflow:hidden auto;min-height:0;scrollbar-width:none}
+.ax-mock .chat>:first-child{margin-top:auto}
+.ax-mock .um{display:flex;flex-direction:column;gap:10px;animation:axpop .25s ease-out}
+.ax-mock .who-u{align-self:flex-end;font-size:.7rem;color:#6A7A90;font-weight:600;margin-bottom:-6px}
+.ax-mock .msg-u{align-self:flex-end;max-width:88%;background:linear-gradient(90deg,#3FB2E2,#2272CC);padding:10px 13px;border-radius:18px 18px 4px;color:#fff;min-height:40px;box-shadow:0 2px 8px rgba(31,108,201,.15)}
+.ax-mock .msg-u small{display:block;opacity:.92;font-size:.92em}
+.ax-mock .ts{align-self:flex-end;font-size:.66rem;color:#8A97AA;margin-top:-6px;min-height:1em}
+.ax-mock .ts.l{align-self:flex-start;margin:4px 0 0}
+.ax-mock .steps{border:1px solid #DCE5F0;border-radius:14px;padding:10px 14px;background:#fff;align-self:flex-start;min-width:72%;box-shadow:0 1px 4px rgba(20,40,80,.05)}
+.ax-mock .steps .hd{display:flex;align-items:center;gap:9px;font-weight:600;font-size:.84rem;color:#1B2433}
+.ax-mock .steps .hd #st-t{margin-left:auto;font-weight:400;color:#6A7A90;font-size:.76rem}
+.ax-mock .steps .ic{width:15px;height:15px;border-radius:50%;border:2px dashed #2C8AD8;animation:axspin 1.6s linear infinite;flex:0 0 auto;box-sizing:border-box}
+.ax-mock .steps.done .ic{border:0;animation:none;color:#13985A;font-weight:800;display:grid;place-items:center}
+.ax-mock .steps.done .ic::before{content:"✓"}
+.ax-mock .steps .tg{border:0;background:none;color:#6A7A90;font-size:.7rem;cursor:pointer;padding:0 0 0 4px;visibility:hidden}
+.ax-mock .steps.done .tg{visibility:visible}
+.ax-mock .steps.col ul{display:none}
+.ax-mock .steps ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:5px}
+.ax-mock .steps li{display:flex;gap:9px;align-items:center;color:#6A7A90;font-size:.82rem}
+.ax-mock .steps li.done{color:#1B2433}
+.ax-mock .steps li .s{width:12px;height:12px;flex:0 0 auto;border-radius:50%;border:2px solid #2C8AD8;border-right-color:transparent;animation:axspin .8s linear infinite;box-sizing:border-box}
+.ax-mock .steps li.done .s{border:0;animation:none;color:#13985A;font-weight:800;font-size:.8rem;display:grid;place-items:center}
+.ax-mock .steps li.done .s::before{content:"✓"}
+.ax-mock .ans{display:grid;gap:6px}
+.ax-mock .who-a{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.82rem;color:#1B2433}
+.ax-mock .who-a .av{width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,#4CC0E6,#1F6CC9);position:relative}
+.ax-mock .who-a .av::before{content:"";position:absolute;left:5px;top:8px;width:10px;height:3px;border-left:3px solid #fff;border-right:3px solid #fff;box-sizing:border-box}
+.ax-mock .msg-a{margin-left:9px;border-left:3px solid #2C8AD8;padding:2px 0 2px 14px;line-height:1.55;color:#1B2433}
+.ax-mock .msg-a ul{list-style:none;margin:2px 0 0;padding:0}
+.ax-mock .msg-a li::before{content:"• "}
+.ax-mock .input{flex:0 0 auto;margin:0 12px 12px;border:1px solid #D5E0EC;border-radius:18px;padding:11px 14px;color:#8A97AA;font-size:.84rem;display:flex;justify-content:space-between;align-items:flex-end;background:#fff;box-shadow:0 4px 14px rgba(31,108,201,.08)}
+.ax-mock .input>div{display:grid;gap:10px}
+.ax-mock .input em{font-style:normal;font-size:.72rem;color:#3B4A60;border:1px solid #D5E0EC;border-radius:999px;padding:3px 9px;display:inline-flex;align-items:center;gap:6px;width:max-content}
+.ax-mock .input em b{width:6px;height:6px;border-radius:50%;background:#22B566}
+.ax-mock .input i{width:28px;height:28px;border-radius:50%;background:#8FC7EC;display:grid;place-items:center;font-style:normal;color:#fff;font-weight:800;transition:transform .15s,background .2s}
+.ax-mock .input.typing #inp{color:#1B2433}
+.ax-mock .input.typing i{background:linear-gradient(135deg,#4CC0E6,#1F6CC9)}
+.ax-mock .input.sent i{transform:scale(.85)}
+.ax-mock .caret{display:inline-block;width:2px;height:1em;background:#1B2433;vertical-align:-2px;margin-left:2px;animation:axblink 1s steps(1) infinite}
+.ax-mock .chip{display:inline-flex;align-items:center;gap:7px;width:max-content;max-width:100%;font-size:.72rem;color:#1B2433;background:#EEF3F9;border:1px solid #D5E0EC;border-radius:8px;padding:4px 9px;animation:axpop .25s ease-out;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ax-mock .chip u{text-decoration:none;color:#6A7A90}
+.ax-mock [hidden]{display:none!important}
+@keyframes axspin{100%{transform:rotate(360deg)}}
+@keyframes axblink{50%{opacity:0}}
+@keyframes axpop{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
+@media (max-width:900px){.ax-mock .app{grid-template-columns:1fr;height:auto}.ax-mock .viewport{min-height:260px;border-right:0}.ax-mock .chat{height:420px;flex:0 0 auto}}
+</style>
+<style>*,*::before,*::after{box-sizing:border-box} img,video{max-width:100%} html{scroll-behavior:smooth}
+.menu-btn{display:none;font:600 15px 'Geist',sans-serif;color:#014CAE;background:#fff;border:0;border-radius:10px;padding:10px 16px;cursor:pointer}
+@media (max-width:900px){.menu-btn{display:block} .site-links{display:none !important;width:100%;flex-direction:column;align-items:flex-start !important;gap:14px !important;padding:8px 0 12px} .site-links.open{display:flex !important}}
+@media (max-width:700px){h1{font-size:44px !important;letter-spacing:-1.5px !important} h2{font-size:36px !important;letter-spacing:-1px !important}}</style>
+<script src="js/axion-hero.js" defer></script>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body>
+<div style="font-family: 'Geist', 'Segoe UI', sans-serif; color: #0B1530; background: #FFFFFF; min-width: 0">
+
+<header style="background: linear-gradient(90deg, #5CDFE6 0%, #014CAE 45%, #014CAE 100%)">
+<nav style="max-width: 1280px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px" aria-label="Hlavní navigace">
+<a href="index.html" aria-label="LMD Technologies – úvod" style="display: flex; align-items: center; text-decoration: none">
+<span style="display: flex; align-items: center; gap: 12px; color: #FFFFFF; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 30px; line-height: 1"><span>L</span><span style="width: 1px; height: 30px; background: #FFFFFF"></span><span>M</span><span style="width: 1px; height: 30px; background: #FFFFFF"></span><span>D</span><span style="margin-left: 6px; font-weight: 700; font-size: 13px; letter-spacing: 4px">TECHNOLOGIES</span></span>
+</a>
+<button type="button" class="menu-btn" aria-expanded="false" aria-controls="site-links" onclick="var l=document.getElementById('site-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',o)">Menu</button><div id="site-links" class="site-links" style="display: flex; flex-wrap: wrap; align-items: center; gap: 22px; font-size: 15px; font-weight: 650">
+<a href="axion.html" aria-current="page" style="color: #FFFFFF; text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; font-weight: 700">Axion CAD</a>
+<a href="konstrukce.html" style="color: #FFFFFF; text-decoration: none">Konstrukce</a>
+<a href="automatizace.html" style="color: #FFFFFF; text-decoration: none">Automatizace</a>
+<a href="materialy.html" style="color: #FFFFFF; text-decoration: none">Materiály</a>
+<a href="solidworks-pdm.html" style="color: #FFFFFF; text-decoration: none">SOLIDWORKS a PDM</a>
+<a href="circuitninja.html" style="color: #FFFFFF; text-decoration: none">CircuitNinja</a>
+<a href="o-nas.html" style="color: #FFFFFF; text-decoration: none">O nás</a>
+<a href="kontakt.html" style="background: #FFFFFF; color: #014CAE; text-decoration: none; padding: 11px 18px; border-radius: 10px; font-weight: 600">Kontakt</a>
+</div>
+</nav>
+</header>
+
+<section style="background: linear-gradient(180deg, #F4F8FB 0%, #FFFFFF 100%); padding: 72px 32px 112px">
+<div style="max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(480px, 100%), 1fr)); gap: 48px; align-items: end">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: #3A4766"><a href="index.html" style="color: #3A4766; text-decoration: none">Úvod</a><span style="width: 1px; height: 16px; background: #014CAE"></span><span>Software</span></div>
+<h1 style="margin: 0; font-weight: 600; font-size: 76px; line-height: 0.98; letter-spacing: -3px">Axion CAD</h1>
+<p style="margin: 0; font-size: 26px; line-height: 1.3; letter-spacing: -0.4px">AI konstruktér přímo v SOLIDWORKS.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #3A4766">Méně předělávek, méně dotazů z dílny. Axion hlídá výkresy, normy, vyrobitelnost i cenu – a propojí konstrukci s celou firmou.</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 28px">
+<a href="kontakt.html" style="background: #014CAE; color: #FFFFFF; text-decoration: none; padding: 18px 28px; border-radius: 999px; font-weight: 600; font-size: 16px">Domluvit demo →</a>
+<a href="https://axion-cad.com/" style="color: #0B1530; font-weight: 600; font-size: 16px; text-underline-offset: 6px">axion-cad.com</a>
+</div>
+</div>
+</div>
+<div class="ax-mock" style="width: 100%">
+<div class="window">
+<div class="bar"><i></i><i></i><i></i><span id="vfile">SOLIDWORKS · Part3.SLDPRT</span></div>
+<div class="app">
+<div class="viewport"><canvas id="cad" width="1166" height="940"></canvas><div class="tag" id="vtag"><b>LIVE</b> · Nový díl</div></div>
+<div class="panel">
+<div class="ph"><span class="hb">☰</span><span class="lmd">L<i></i>M<i></i>D</span><div class="tt"><strong>Axion</strong><small>AI asistent konstruktéra · LMD Technologies</small></div><span class="mn">Design ▾</span><span class="mn">Analyze ▾</span></div>
+<div class="chat" id="chat">
+<div class="um" id="um"><div class="who-u">Vy</div><div class="msg-u" id="mu">Vytvoř díl podle přiloženého obrázku<small>[📎 výkres]</small></div><div class="ts" id="ts"></div></div>
+<div class="steps" id="st"><div class="hd"><span class="ic" id="st-i"></span><span id="st-h">Pracuji…</span><span id="st-t">0.0 s</span><button type="button" class="tg" id="st-g" tabindex="-1" aria-label="Kroky">▾</button></div><ul id="st-l"></ul></div>
+<div class="ans" id="aw"><div class="who-a"><span class="av"></span>Axion</div><div class="msg-a" id="ma"></div><div class="ts l" id="ts2"></div></div>
+</div>
+<div class="input" id="cmp"><div><span class="chip" id="chip">📎 Screenshot 2026-10-06 073948.png <u>✕</u></span><span id="inp">Napište úkol nebo příkaz…</span><em><b></b>Gemini</em></div><i>→</i></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section style="padding: 112px 32px">
+<div style="max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 64px">
+<h2 style="margin: 0; font-weight: 600; font-size: 52px; line-height: 1.04; letter-spacing: -1.8px">Co Axion v SOLIDWORKS hlídá.</h2>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #DCE3EC">
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid #DCE3EC"><span style="font-weight: 600; font-size: 21px; color: #0B3A7E">Výkresy a normy</span><span style="font-size: 16px; line-height: 1.6; color: #3A4766">Čte živou geometrii i značky na výkrese a porovná je s pravidly vaší firmy.</span></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid #DCE3EC"><span style="font-weight: 600; font-size: 21px; color: #0B3A7E">Vyrobitelnost a cena</span><span style="font-size: 16px; line-height: 1.6; color: #3A4766">Rádiusy, hloubky děr, tloušťky stěn a ohyby proti limitům dílny. Včetně odhadu ceny.</span></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid #DCE3EC"><span style="font-weight: 600; font-size: 21px; color: #0B3A7E">Podobné díly</span><span style="font-size: 16px; line-height: 1.6; color: #3A4766">Najde díl, který už máte navržený, dřív, než ho nakreslíte znovu.</span></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid #DCE3EC"><span style="font-weight: 600; font-size: 21px; color: #0B3A7E">PDM · ERP · MES</span><span style="font-size: 16px; line-height: 1.6; color: #3A4766">Zapisuje jen do PDM/PLM, ostatní systémy čte přes API.</span></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid #DCE3EC"><span style="font-weight: 600; font-size: 21px; color: #0B3A7E">Data zůstávají u vás</span><span style="font-size: 16px; line-height: 1.6; color: #3A4766">Většina funkcí běží lokálně. AI jen v chatu – s vlastním klíčem nebo lokálním modelem.</span></div>
+</div>
+</div>
+</section>
+
+<section style="background: #F4F8FB; padding: 112px 32px">
+<div style="max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 8px; border-left: 1px solid #014CAE; padding-left: 24px"><span style="font-weight: 600; font-size: 72px; letter-spacing: -3px; line-height: 1; color: #014CAE">60–70 %</span><span style="font-size: 16px; color: #3A4766">méně času seniorů na kontrolu výkresů</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px; border-left: 1px solid #014CAE; padding-left: 24px"><span style="font-weight: 600; font-size: 72px; letter-spacing: -3px; line-height: 1; color: #014CAE">60–70 %</span><span style="font-size: 16px; color: #3A4766">méně reklamací po výrobě</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px; border-left: 1px solid #014CAE; padding-left: 24px"><span style="font-weight: 600; font-size: 72px; letter-spacing: -3px; line-height: 1; color: #014CAE">CZ · EN</span><span style="font-size: 16px; color: #3A4766">další jazyky na vyžádání</span></div>
+</div>
+<span style="font-size: 13px; color: #4A5672">Podle interního testování LMD Technologies.</span>
+</div>
+</section>
+
+<section style="padding: 112px 32px">
+<div style="max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-weight: 600; font-size: 52px; line-height: 1.04; letter-spacing: -1.8px">Nasazení bez pevného balíku.</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #3A4766">Funkce vybereme podle toho, co vaše konstrukce opravdu potřebuje. Typická kontrola vyrobitelnosti stojí v AI méně než 0,01 €.</p>
+</div>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #DCE3EC">
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid #DCE3EC"><span style="font-weight: 600; font-size: 21px; color: #0B3A7E">Úvodní schůzka</span><span style="font-size: 16px; line-height: 1.6; color: #3A4766">Projdeme vaše výkresy, normy a systémy a vybereme funkce.</span></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid #DCE3EC"><span style="font-weight: 600; font-size: 21px; color: #0B3A7E">Nasazení</span><span style="font-size: 16px; line-height: 1.6; color: #3A4766">Axion běží jako panel v SOLIDWORKS, napojíme ho na PDM a další systémy.</span></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid #DCE3EC"><span style="font-weight: 600; font-size: 21px; color: #0B3A7E">Úpravy podle praxe</span><span style="font-size: 16px; line-height: 1.6; color: #3A4766">Funkce můžete kdykoli přidat nebo změnit. Lokální funkce nic navíc nestojí.</span></div>
+</div>
+</div>
+</section>
+
+<section style="padding: 0 32px 128px">
+<div style="max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; border-top: 1px solid #DCE3EC; padding-top: 96px">
+<h2 style="margin: 0; font-weight: 600; font-size: 72px; line-height: 1; letter-spacing: -2.6px; max-width: 900px">Ukážeme Axion na vašem výkrese.</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 28px">
+<a href="kontakt.html" style="background: #014CAE; color: #FFFFFF; text-decoration: none; padding: 18px 28px; border-radius: 999px; font-weight: 600; font-size: 16px">Domluvit demo →</a>
+<a href="mailto:info@lmd-technologies.cz" style="color: #014CAE; font-weight: 600; font-size: 20px; text-underline-offset: 6px">info@lmd-technologies.cz</a>
+</div>
+</div>
+</section>
+
+<footer style="background: #F4F8FB; border-top: 1px solid #DCE3EC; padding: 64px 32px 40px">
+<div style="max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 32px; font-size: 15px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="display: flex; align-items: center; gap: 10px; font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 24px; color: #014CAE; line-height: 1"><span>L</span><span style="width: 1px; height: 24px; background: #014CAE"></span><span>M</span><span style="width: 1px; height: 24px; background: #014CAE"></span><span>D</span></span>
+<span style="color: #3A4766; line-height: 1.6">Strojírensko-technologická řešení a software pro konstruktéry.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-weight: 600">Oblasti</span>
+<a href="axion.html" style="color: #3A4766; text-decoration: none">Axion CAD</a>
+<a href="konstrukce.html" style="color: #3A4766; text-decoration: none">Konstrukce</a>
+<a href="automatizace.html" style="color: #3A4766; text-decoration: none">Automatizace</a>
+<a href="materialy.html" style="color: #3A4766; text-decoration: none">Materiály</a>
+<a href="solidworks-pdm.html" style="color: #3A4766; text-decoration: none">SOLIDWORKS a PDM</a>
+<a href="circuitninja.html" style="color: #3A4766; text-decoration: none">Spolupráce s CircuitNinja</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-weight: 600">Firma</span>
+<a href="o-nas.html" style="color: #3A4766; text-decoration: none">O nás</a>
+<a href="kontakt.html" style="color: #3A4766; text-decoration: none">Kontakt</a>
+<a href="https://www.linkedin.com/company/lmd-technologies-s-r-o/" style="color: #3A4766; text-decoration: none">LinkedIn</a>
+<a href="https://www.instagram.com/lmd_technologies" style="color: #3A4766; text-decoration: none">Instagram</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; color: #3A4766">
+<span style="font-weight: 600; color: #0B1530">LMD Technologies s.r.o.</span>
+<span>Farní 728/15, 162 00 Praha 6</span>
+<span>IČO 219 25 780 · DIČ CZ21925780</span>
+</div>
+</div>
+<div style="border-top: 1px solid #DCE3EC; padding-top: 24px; font-size: 13px; color: #4A5672">© 2026 LMD Technologies s.r.o. · SOLIDWORKS® je ochranná známka společnosti Dassault Systèmes.</div>
+</div>
+</footer>
+
+</div>
+
+</body>
+</html>
