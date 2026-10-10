@@ -6,7 +6,7 @@ var lang="cs";
 var CS={ask:"Napište úkol nebo příkaz…"};
 function T(k){return CS[k]||""}
 var DATA={cs:{th:["Pracuji…","Hotovo"],
-scen:[{u:"Vytvoř díl podle přiloženého obrázku",att:"Screenshot 2026-10-06 073948.png",ref:"výkres",s:["Čtu aktivní dokument","Hledám soubory","Analyzuji přiložený obrázek","Vytvářím základní plech","Ohýbám boční stěny","Vyřezávám díry, drážky a výřezy"],build:{3:1,4:2,5:3},a:"Vytvořil jsem plechový díl podle přiloženého obrázku:<ul><li><b>Základní plech</b> ≈ 150 × 110 mm, t = 3 mm</li><li><b>Dvě boční stěny</b> stoupající dozadu, délka ≈ 200 mm</li><li><b>Díry, drážky</b> a zadní výřezy</li></ul>",file:"Part3.SLDPRT",tag:"<b>LIVE</b> · Sheet-Metal1 · t = 3 mm · L ≈ 200"}]}};
+scen:[{u:"Vytvoř díl podle přiloženého obrázku",att:"Screenshot 2026-10-06 073948.png",ref:"výkres",s:["Čtu aktivní dokument","Hledám soubory","Analyzuji přiložený obrázek","Vytvářím základní plech","Ohýbám boční stěny","Vyřezávám díry a drážky"],build:{3:1,4:2,5:3},a:"Vytvořil jsem plechový díl podle přiloženého obrázku:<ul><li><b>Základní plech</b> ≈ 76 × 51 mm, t = 2 mm</li><li><b>Dvě boční stěny</b> výšky 41 mm se zkosenými a zaoblenými rohy</li><li><b>Oválná díra a dvě drážky</b> v\u00a0každé stěně</li></ul>",file:"Part3.SLDPRT",tag:"<b>LIVE</b> · Sheet-Metal1 · t = 2 mm · L ≈ 76"}]}};
 
 /* ---------- shaded 3D viewer ---------- */
 function sub(a,b){return[a[0]-b[0],a[1]-b[1],a[2]-b[2]]}
@@ -24,20 +24,27 @@ function prismGeo(prof,z0,z1,col,holes){
     g.push({p:[[a[0],a[1],z0],[b[0],b[1],z0],[b[0],b[1],z1],[a[0],a[1],z1]],n:nrm([dy,-dx,0]),fe:[]})}
   g.push({p:prof.map(function(q){return[q[0],q[1],z1]}),n:[0,0,1],fe:edgesAll(n)});
   g.push({p:prof.map(function(q){return[q[0],q[1],z0]}),n:[0,0,-1],fe:edgesAll(n)});
-  (holes||[]).forEach(function(h){[[z1+.06,1],[z0-.06,-1]].forEach(function(zz){g.push({p:h.map(function(q){return[q[0],q[1],zz[0]]}),n:[0,0,zz[1]],fe:edgesAll(h.length),col:"#2E3238"})})});
+  var hw=[],H1=[],H0=[];
+  (holes||[]).forEach(function(h){var B=0;for(var i=0;i<h.length;i++){var a=h[i],b=h[(i+1)%h.length];B+=a[0]*b[1]-b[0]*a[1]}if(B<0)h=h.slice().reverse();
+    for(var i=0;i<h.length;i++){var a=h[i],b=h[(i+1)%h.length],dx=b[0]-a[0],dy=b[1]-a[1];hw.push({p:[[a[0],a[1],z0],[b[0],b[1],z0],[b[0],b[1],z1],[a[0],a[1],z1]],n:nrm([-dy,dx,0]),fe:[]})}
+    H1.push(h.map(function(q){return[q[0],q[1],z1]}));H0.push(h.map(function(q){return[q[0],q[1],z0]}))});
+  if(hw.length){g[g.length-2].h=H1;g[g.length-1].h=H0;g=hw.concat(g)}
   return g}
 function arcPts(cx,cy,r,a0,a1,k){var o=[];for(var i=0;i<=k;i++){var a=a0+(a1-a0)*i/k;o.push([cx+r*Math.cos(a),cy+r*Math.sin(a)])}return o}
 function circ(cx,cy,r){return arcPts(cx,cy,r,0,Math.PI*2*(23/24),23)}
 function slot(cx,cy,w,h){var r=w/2;return arcPts(cx,cy+h/2-r,r,0,Math.PI,8).concat(arcPts(cx,cy-h/2+r,r,Math.PI,Math.PI*2,8))}
 var SG={};
 function sheetGeo(lvl){if(SG[lvl])return SG[lvl];
-  var L=200,W=110,t=3,LB=150,ox=-100,oy=-42;
-  function T2(p){return[p[0]+ox,p[1]+oy+20]}
+  /* plechový díl 1100000 – rozměry ze STEP (mm): t=2, R=5, L=76.45, W=50.6, výška stěn 41 */
+  var S=2.6,L=76.45,W=50.6,t=2,r=5,ox=-L/2;
+  var OUT=[[76.5,5],[76.5,25.6],[76.2,27.6],[75.7,29.5],[74.7,31.2],[73.5,32.7],[71.9,34],[70.2,34.9],[56.6,40.3],[54.8,40.8],[52.9,41],[33.6,41],[32.1,40.9],[30.6,40.5],[29.1,39.9],[27.8,39.1],[4.1,22],[2.7,20.8],[1.6,19.3],[0.7,17.6],[0.2,15.8],[0,13.9],[0,5]],
+      HOLES=[[[28.4,25],[28.1,25.1],[27.7,25.2],[27.1,25],[26.4,24.7],[25.6,24],[24.6,23.1],[23.6,22],[22.6,20.6],[21.7,19.1],[21,17.8],[20.5,16.5],[20.2,15.5],[20.1,14.7],[20.2,14.2],[20.3,13.8],[20.5,13.6],[20.8,13.5],[21.2,13.5],[21.8,13.6],[22.4,14],[23.3,14.6],[24.3,15.5],[25.3,16.7],[26.3,18],[27.2,19.5],[27.9,20.9],[28.4,22.1],[28.7,23.1],[28.8,23.9],[28.7,24.4],[28.6,24.8]],[[54.6,29.1],[54.9,29.8],[55.3,30.3],[56,30.6],[56.8,30.6],[57.4,30.2],[57.9,29.7],[58,28.9],[58,28.8],[57.3,18],[57,17.3],[56.5,16.7],[55.8,16.4],[55.1,16.5],[54.4,16.9],[54,17.5],[53.9,18.2]],[[62.8,27.5],[63,28.3],[63.5,29],[64.2,29.4],[65,29.6],[65.8,29.4],[66.4,28.9],[66.9,28.2],[67,27.4],[67,27.3],[66.6,18],[66.4,17.2],[65.9,16.6],[65.2,16.1],[64.3,16],[63.5,16.2],[62.9,16.7],[62.5,17.4],[62.3,18.2]]];
+  function M(p){return[(p[0]+ox)*S,p[1]*S]}
   var groups=[];
-  var r=3,zi=W/2-t-r;
-  var base=boxGeo(ox,oy+20-t,lvl>=2?-zi:-W/2+t,ox+LB,oy+20,lvl>=2?zi:W/2-t);base.first=true;groups.push(base);
-  function bend(sg){var g=[],k=10,yc=oy+20+r,zc=sg*zi,x0=ox,x1=ox+LB;
-    function P(x,rad,a){return[x,yc+rad*Math.sin(a),zc+sg*rad*Math.cos(a)]}
+  var zi=W/2-t-r;
+  var base=boxGeo(ox*S,-t*S,(lvl>=2?-zi:-W/2+t)*S,(ox+L)*S,0,(lvl>=2?zi:W/2-t)*S);base.first=true;groups.push(base);
+  function bend(sg){var g=[],k=10,yc=r*S,zc=sg*zi*S,x0=ox*S,x1=(ox+L)*S;
+    function P(x,rad,a){return[x,yc+rad*S*Math.sin(a),zc+sg*rad*S*Math.cos(a)]}
     for(var i=0;i<k;i++){var a0=-Math.PI/2+Math.PI/2*i/k,a1=-Math.PI/2+Math.PI/2*(i+1)/k,am=(a0+a1)/2,nn=[0,Math.sin(am),sg*Math.cos(am)];
       g.push({p:[P(x0,r+t,a0),P(x1,r+t,a0),P(x1,r+t,a1),P(x0,r+t,a1)],n:nn,fe:[]});
       g.push({p:[P(x0,r,a0),P(x1,r,a0),P(x1,r,a1),P(x0,r,a1)],n:[-nn[0],-nn[1],-nn[2]],fe:[]})}
@@ -45,13 +52,9 @@ function sheetGeo(lvl){if(SG[lvl])return SG[lvl];
     return g}
   if(lvl>=2){
     groups.push(bend(1));groups.push(bend(-1));
-    var prof=[[0,r]];
-    if(lvl>=3){prof=prof.concat([[150,r]]).concat(arcPts(172,r,22,Math.PI,0,14).slice(1,-1)).concat([[194,r]])}else prof.push([194,r]);
-    prof=prof.concat([[200,6+r],[200,92]]).concat(arcPts(190,92,10,0,Math.PI/2,5).slice(1)).concat([[10,26]]).concat(arcPts(10,16,10,Math.PI/2,Math.PI,5).slice(1)).concat([[0,0]]);
-    prof.pop();prof=prof.map(T2);
-    var holes=lvl>=3?[circ(20,13,5),circ(152,74,4),slot(152,50,7,16)].map(function(h){return h.map(T2)}):[];
-    groups.push(prismGeo(prof,W/2-t,W/2,null,holes));
-    groups.push(prismGeo(prof,-W/2,-W/2+t,null,holes));
+    var prof=OUT.map(M),holes=lvl>=3?HOLES.map(function(h){return h.map(M)}):[];
+    groups.push(prismGeo(prof,(W/2-t)*S,W/2*S,null,holes));
+    groups.push(prismGeo(prof,-W/2*S,(-W/2+t)*S,null,holes));
   }
   return SG[lvl]=groups}
 var LIGHT=nrm([-0.45,0.6,-0.66]),HALF=nrm([LIGHT[0],LIGHT[1],LIGHT[2]-1]);
@@ -80,9 +83,9 @@ Viewer.prototype.draw=function(){var c=this.ctx,w=this.cv.clientWidth,h=this.cv.
     g.forEach(function(f,k){var I=info[k];if(!I.front)return;var pp=I.tp.map(Pj);
       var dl=Math.max(0,dot(I.tn,LIGHT)),sp=Math.pow(Math.max(0,dot(I.tn,HALF)),24),v=Math.min(1,0.18+0.62*dl+0.3*sp),gv=Math.round(62+140*v);
       var col=f.col||("rgb("+gv+","+gv+","+(gv+3)+")");
-      c.beginPath();pp.forEach(function(q,i){i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])});c.closePath();c.fillStyle=col;c.fill();c.strokeStyle=col;c.lineWidth=.7;c.stroke();
+      var hp=(f.h||[]).map(function(hh){return hh.map(function(v){return Pj(Tr(v,20))})});c.beginPath();pp.forEach(function(q,i){i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])});c.closePath();hp.forEach(function(hh){hh.forEach(function(q,i){i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])});c.closePath()});c.fillStyle=col;c.fill("evenodd");c.strokeStyle=col;c.lineWidth=.7;c.stroke();
       c.strokeStyle="#16191F";c.lineWidth=1.1;c.beginPath();
-      f.fe.forEach(function(e){c.moveTo(pp[e[0]][0],pp[e[0]][1]);c.lineTo(pp[e[1]][0],pp[e[1]][1])});
+      f.fe.forEach(function(e){c.moveTo(pp[e[0]][0],pp[e[0]][1]);c.lineTo(pp[e[1]][0],pp[e[1]][1])});hp.forEach(function(hh){hh.forEach(function(q,i){i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])});c.closePath()});
       c.stroke()})})};
 var hero=new Viewer(document.getElementById("cad"),{ang:-0.5,tilt:0.55,span:370,host:document.querySelector(".ax-mock .viewport")});
 hero.fit(sheetGeo(3));hero.resize();
